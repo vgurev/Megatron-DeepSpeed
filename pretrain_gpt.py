@@ -15,6 +15,19 @@
 
 """Pretrain GPT"""
 
+from mpi4py import MPI
+import os, sys
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+
+if "MPI" in os.environ:
+    os.environ["RANK"] = str(rank)
+    sys.argv.extend(["--local_rank", str(rank % 2)]) 
+    os.environ["LOCAL_RANK"] = str(rank % 2)
+    os.environ["NODE_RANK"] = str(rank // 2)
+    
+
+
 import torch
 import math
 from functools import partial
